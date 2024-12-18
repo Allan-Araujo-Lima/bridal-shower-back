@@ -18,6 +18,6 @@ export class Sugestions {
     @Column()
     category: string;
 
-    @Column()
+    @Column({ nullable: true })
     guest: string;
 }

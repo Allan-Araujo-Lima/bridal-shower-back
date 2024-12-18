@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import { SugestionsModule } from './modules/sugestions/sugestions.module';
 import { DatabaseModule } from './config/database.module';
 import * as Joi from 'joi';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -13,7 +15,11 @@ import * as Joi from 'joi';
         FRONTEND_URL: Joi.string(),
       }),
     }),
-    SugestionsModule
+    SugestionsModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads'
+    })
   ],
 })
 export class AppModule { }
