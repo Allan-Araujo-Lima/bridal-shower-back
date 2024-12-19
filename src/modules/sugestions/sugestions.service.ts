@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Sugestions } from './repository/sugestions.entity';
+import { UpdateSugestion } from './dto/update-sugestion.dto';
 
 @Injectable()
 export class SugestionsService {
@@ -17,5 +18,9 @@ export class SugestionsService {
     create(createSugestionDto: any) {
         const sugestion = this.sugestionsRepository.create(createSugestionDto);
         return this.sugestionsRepository.save(sugestion);
+    }
+
+    update(id: string, updateSugestion: UpdateSugestion) {
+        return this.sugestionsRepository.update(id, updateSugestion)
     }
 }

@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Put, Param, Patch } from '@nestjs/common';
 import { SugestionsService } from './sugestions.service';
+import { UpdateSugestion } from './dto/update-sugestion.dto';
 
 @Controller('sugestions')
 export class SugestionsController {
@@ -13,5 +14,10 @@ export class SugestionsController {
     @Post()
     create(@Body() createSugestionDto: any) {
         return this.sugestionsService.create(createSugestionDto);
+    }
+
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateSugestion: UpdateSugestion) {
+        return this.sugestionsService.update(id, updateSugestion)
     }
 }
