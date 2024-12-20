@@ -11,6 +11,11 @@ export class SugestionsController {
         return this.sugestionsService.findAll();
     }
 
+    @Get(':guest')
+    findAllByGuest(@Param('guest') guest: string) {
+        return this.sugestionsService.findAllByGuest(guest);
+    }
+
     @Post()
     create(@Body() createSugestionDto: any) {
         return this.sugestionsService.create(createSugestionDto);
