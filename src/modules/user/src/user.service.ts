@@ -24,5 +24,17 @@ export class UserService {
     );
 
     await this.userRepository.save(user);
+
+  }
+  findAllUsers() {
+    return this.userRepository.find()
+  }
+
+  findByEmail(email: string) {
+    return this.userRepository.findOne({ where: { email: email } })
+  }
+
+  findOne(id: string) {
+    return this.userRepository.findOne({ where: { id: id } })
   }
 }
