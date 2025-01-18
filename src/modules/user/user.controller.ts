@@ -1,16 +1,18 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseFilters } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user-dto';
-import { string } from 'joi';
+import { HttpExceptionFilter } from 'src/utils/http-exceptions.filter';
+import { Public } from '../auth/public.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
+  @Public()
   @Post('signup')
-  create(@Body() CreateUserDto: CreateUserDto) {
+  async create(@Body() CreateUserDto: CreateUserDto) {
     const user = { ...CreateUserDto, id: undefined, created_at: new Date(), updated_at: new Date() };
-    return this.userService.create(user);
+    return await this.userService.create(user);
   }
 
   @Get()

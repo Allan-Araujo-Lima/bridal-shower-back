@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './repository/index.entity';
 import { Repository } from 'typeorm';
@@ -15,7 +15,7 @@ export class UserService {
     const verifyUser = await this.userRepository.findOne({ where: { email: user.email } });
 
     if (verifyUser) {
-      return new Error('User already exists');
+      throw new HttpException('User already exists', 400);
     }
 
     user.password = bcrypt.hashSync(

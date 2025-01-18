@@ -6,7 +6,9 @@ import { DatabaseModule } from './config/database.module';
 import * as Joi from 'joi';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { UserModule } from './modules/user/src/user.module';
+import { UserModule } from './modules/user/user.module';
+import { AuthService } from './modules/auth/auth.service';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +20,7 @@ import { UserModule } from './modules/user/src/user.module';
     }),
     SugestionsModule,
     UserModule,
+    AuthModule,
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
       serveRoot: '/uploads'
