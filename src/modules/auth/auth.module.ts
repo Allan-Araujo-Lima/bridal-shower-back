@@ -14,7 +14,8 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '28000s' }
     })
   ],
-  providers: [AuthService,
+  providers: [
+    AuthService,
     {
       provide: 'APP_GUARD',
       useClass: AuthGuard

@@ -10,8 +10,8 @@ export class AuthService {
     private jwtService: JwtService,
   ) { }
 
-  async signIn(email: string, password: string): Promise<{ access_token: string }> {
-    const user_data = await this.userService.findByEmail(email);
+  async signIn(email: string, password: string): Promise<any> {
+    const user_data = await this.userService.findOneWithEmail(email);
 
     if (!user_data) {
       throw new NotFoundException('User not found');
@@ -23,7 +23,7 @@ export class AuthService {
     const isEqual = await bcrypt.compare(password, user_data.password)
 
     if (!isEqual) {
-      throw new HttpException("Wrong password or email", HttpStatus.BAD_REQUEST)
+      throw new BadRequestException('Wrong password or email');
     }
 
     const payload = {
