@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -14,7 +14,7 @@ export class AuthService {
     const user_data = await this.userService.findOneWithEmail(email);
 
     if (!user_data) {
-      throw new NotFoundException('User not found');
+      throw new HttpException('User not found', 404);
     }
     if (!user_data.password) {
       throw new HttpException('No password set for this profile', HttpStatus.BAD_REQUEST)
@@ -23,7 +23,7 @@ export class AuthService {
     const isEqual = await bcrypt.compare(password, user_data.password)
 
     if (!isEqual) {
-      throw new BadRequestException('Wrong password or email');
+      throw new HttpException('Wrong password or email', 400);
     }
 
     const payload = {
