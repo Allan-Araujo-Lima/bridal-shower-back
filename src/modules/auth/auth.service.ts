@@ -38,6 +38,7 @@ export class AuthService {
 
   async getUser(req: any): Promise<any> {
     const authHeader = req.headers.authorization;
+    console.log(authHeader)
     if (!authHeader) {
       throw new UnauthorizedException('No token provided');
     }

@@ -2,6 +2,7 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './repository/index.entity';
 import { Repository } from 'typeorm';
+import { UpdateUserDto } from './dto/update-user-dto';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -27,24 +28,63 @@ export class UserService {
 
   }
   findAllUsers() {
-    return this.userRepository.find()
+    const users = this.userRepository.find()
+
+    if (!users) {
+      throw new HttpException('No such user', 404);
+    }
+
+    return users;
   }
 
   async findOneWithEmail(email: string): Promise<User | undefined> {
-    return await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: {
         email,
       },
       select: ['id', 'email', 'password'],
     });
+
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return user;
   }
 
-
   findByEmail(email: string) {
-    return this.userRepository.findOne({ where: { email: email } })
+    if (!email) {
+      throw new HttpException('Email not provided', 400);
+    }
+
+    const user = this.userRepository.findOne({ where: { email: email } });
+
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return user;
   }
 
   findOne(id: string) {
-    return this.userRepository.findOne({ where: { id: id } })
+    const user = this.userRepository.findOne({ where: { id: id } })
+
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    return user;
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+
+    const userId = await this.userRepository.findOne({ where: { id: id } });
+
+    if (!userId) {
+      throw new HttpException('User not found', 404);
+    }
+
+    await this.userRepository.update(id, updateUserDto);
+    return this.userRepository.findOne({ where: { id: id } });
   }
 }
