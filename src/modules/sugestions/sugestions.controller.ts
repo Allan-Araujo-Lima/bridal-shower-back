@@ -3,21 +3,35 @@ import { SugestionsService } from './sugestions.service';
 import { CreateSugestion } from './dto/create-sugestion.dto';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('sugestions')
 @Controller('sugestions')
 export class SugestionsController {
     constructor(private readonly sugestionsService: SugestionsService) { }
 
+    @ApiResponse({
+        status: 200,
+        description: 'Sugestions taken',
+    })
     @Get()
     findAll() {
         return this.sugestionsService.findAll();
     }
 
+    @ApiResponse({
+        status: 200,
+        description: 'Sugestions taken by guest',
+    })
     @Get(':guest')
     findAllByGuest(@Param('guest') guest: string) {
         return this.sugestionsService.findAllByGuest(guest);
     }
 
+    @ApiResponse({
+        status: 200,
+        description: 'Sugestion created',
+    })
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     async create(
@@ -32,6 +46,10 @@ export class SugestionsController {
 
         return sugestion;
     }
+    @ApiResponse({
+        status: 200,
+        description: 'Sugestion updated',
+    })
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateSugestion: UpdateSugestion) {
         return this.sugestionsService.update(id, updateSugestion)

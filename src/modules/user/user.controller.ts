@@ -4,7 +4,9 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { HttpExceptionFilter } from 'src/utils/http-exceptions.filter';
 import { Public } from '../auth/public.decorator';
 import { UpdateUserDto } from './dto/update-user-dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
