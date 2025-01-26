@@ -22,12 +22,6 @@ export class CreateUserDto {
     @IsNotEmpty()
     last_name: string;
     @ApiProperty({
-        description: 'Phone number of the user',
-        example: '1234567890'
-    })
-    @IsNotEmpty()
-    phone: string;
-    @ApiProperty({
         description: 'Password of the user',
         example: 'Password123'
     })
@@ -38,4 +32,14 @@ export class CreateUserDto {
         minSymbols: 0,
     })
     password: string;
+    @ApiProperty({
+        description: 'Is the user active',
+        example: false
+    })
+    is_active: boolean;
+    @ApiProperty({
+        description: 'Expiration date of the user',
+        example: '2022-12-31'
+    })
+    expiration_date: Date;
 }

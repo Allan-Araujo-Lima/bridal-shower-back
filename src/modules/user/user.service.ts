@@ -1,9 +1,10 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './repository/index.entity';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user-dto';
 import * as bcrypt from 'bcrypt';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class UserService {
@@ -86,5 +87,11 @@ export class UserService {
 
     await this.userRepository.update(id, updateUserDto);
     return this.userRepository.findOne({ where: { id: id } });
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  async handleCron() {
+    await this.userRepository.update({ expiration_date: LessThan(new Date()) }, { is_active: false });
+    return console.log('Cron job executed');
   }
 }
