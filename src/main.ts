@@ -5,9 +5,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { HttpExceptionFilter } from './utils/http-exceptions.filter';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as bodyParser from 'body-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use('/webhook', bodyParser.raw({ type: 'application/json' }));
 
   const config = new DocumentBuilder()
     .setTitle('API Documentation')

@@ -20,29 +20,27 @@ export class UserService {
       throw new HttpException('User already exists', 400);
     }
 
-    user.password = bcrypt.hashSync(
+    user.password = await bcrypt.hash(
       user.password,
       Number(process.env.SALT_PASSWORD),
     );
 
     await this.userRepository.save(user);
-
   }
-  findAllUsers() {
-    const users = this.userRepository.find()
 
-    if (!users) {
-      throw new HttpException('No such user', 404);
+  async findAllUsers() {
+    const users = await this.userRepository.find();
+
+    if (!users.length) {
+      throw new HttpException('No users found', 404);
     }
 
     return users;
   }
 
-  async findOneWithEmail(email: string): Promise<User | undefined> {
+  async findOneWithEmail(email: string): Promise<User> {
     const user = await this.userRepository.findOne({
-      where: {
-        email,
-      },
+      where: { email },
       select: ['id', 'email', 'password'],
     });
 
@@ -53,12 +51,12 @@ export class UserService {
     return user;
   }
 
-  findByEmail(email: string) {
+  async findByEmail(email: string): Promise<User> {
     if (!email) {
       throw new HttpException('Email not provided', 400);
     }
 
-    const user = this.userRepository.findOne({ where: { email: email } });
+    const user = await this.userRepository.findOne({ where: { email } });
 
     if (!user) {
       throw new HttpException('User not found', 404);
@@ -67,8 +65,8 @@ export class UserService {
     return user;
   }
 
-  findOne(id: string) {
-    const user = this.userRepository.findOne({ where: { id: id } })
+  async findOne(id: string): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
       throw new HttpException('User not found', 404);
@@ -78,20 +76,53 @@ export class UserService {
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({ where: { id } });
 
-    const userId = await this.userRepository.findOne({ where: { id: id } });
-
-    if (!userId) {
+    if (!user) {
       throw new HttpException('User not found', 404);
     }
 
     await this.userRepository.update(id, updateUserDto);
-    return this.userRepository.findOne({ where: { id: id } });
+    return this.userRepository.findOne({ where: { id } });
+  }
+
+  async activeUser(id: string, productId: string) {
+    const productDurations = {
+      '1': 3,
+      '2': 6,
+      '3': 9,
+      '4': 12,
+    };
+
+    const duration = productDurations[productId];
+    if (!duration) {
+      throw new HttpException('Product not found', 404);
+    }
+
+    const user = await this.userRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new HttpException('User not found', 404);
+    }
+
+    let expiration_date = new Date();
+
+    if (user.expiration_date && user.expiration_date.getTime() > new Date().getTime()) {
+      expiration_date = user.expiration_date;
+    }
+
+    expiration_date.setMonth(expiration_date.getMonth() + duration);
+
+    await this.userRepository.update(id, { expiration_date, is_active: true });
+    return this.userRepository.findOne({ where: { id } });
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
   async handleCron() {
-    await this.userRepository.update({ expiration_date: LessThan(new Date()) }, { is_active: false });
-    return console.log('Cron job executed');
+    const result = await this.userRepository.update(
+      { expiration_date: LessThan(new Date()) },
+      { is_active: false },
+    );
+    console.log('Cron job executed', result.affected, 'users updated');
   }
 }

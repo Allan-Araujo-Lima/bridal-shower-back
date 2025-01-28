@@ -28,7 +28,7 @@ export class AuthService {
 
     const payload = {
       sub: user_data.id,
-      email: user_data.email,
+      email: user_data.email
     }
 
     return {
@@ -47,6 +47,15 @@ export class AuthService {
     try {
       const decoded = await this.jwtService.verifyAsync(token);
       return decoded
+    } catch (err) {
+      throw new UnauthorizedException('Invalid or expired token')
+    }
+  }
+
+  async getUserId(jwt: string): Promise<any> {
+    try {
+      const decoded = await this.jwtService.verifyAsync(jwt);
+      return decoded.sub
     } catch (err) {
       throw new UnauthorizedException('Invalid or expired token')
     }

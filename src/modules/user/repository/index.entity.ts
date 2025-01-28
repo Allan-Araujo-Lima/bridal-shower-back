@@ -2,6 +2,13 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 
 @Entity()
 export class User {
+    static is_active: boolean;
+    static save(user: never) {
+        throw new Error('Method not implemented.');
+    }
+    static findOne(arg0: { where: { email: string; }; }) {
+        throw new Error('Method not implemented.');
+    }
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
