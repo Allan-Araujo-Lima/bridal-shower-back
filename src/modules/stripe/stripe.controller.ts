@@ -2,14 +2,15 @@ import { Body, Controller, Post, Headers, BadRequestException } from '@nestjs/co
 import { StripeService } from './stripe.service';
 import { CreateChargeDTO } from './dto/create-charge.dto';
 import { CreateCheckoutDTO } from './dto/create-checkout.dto';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('stripe')
 @Controller('stripe')
 export class StripeController {
     constructor(private readonly stripeService: StripeService) { }
 
     @Post('charge')
     async chargeCard(@Body() paymentData: CreateChargeDTO) {
-        // Valida os dados do DTO
         if (!paymentData.amount || !paymentData.currency || !paymentData.source) {
             throw new BadRequestException('Invalid payment data');
         }
@@ -22,6 +23,11 @@ export class StripeController {
     }
 
     @Post('checkout')
+    @ApiBearerAuth()
+    @ApiOperation({ summary: 'Create a checkout session' })
+    @ApiBody({ type: CreateCheckoutDTO })
+    @ApiResponse({ status: 201, description: 'Checkout session created successfully.' })
+    @ApiResponse({ status: 400, description: 'Bad Request.' })
     async checkoutSession(
         @Body() checkoutData: CreateCheckoutDTO,
         @Headers('authorization') authHeader: string,
