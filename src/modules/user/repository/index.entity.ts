@@ -34,6 +34,12 @@ export class User {
     @Column({ type: 'timestamp', default: '2025-01-01 17:37:15.589091' })
     expiration_date: Date;
 
+    @Column({
+        select: false,
+        nullable: true
+    })
+    reset_token: string;
+
     @CreateDateColumn()
     created_at: Date;
 

@@ -2,7 +2,7 @@ import { Body, Controller, Post, Headers, BadRequestException } from '@nestjs/co
 import { StripeService } from './stripe.service';
 import { CreateChargeDTO } from './dto/create-charge.dto';
 import { CreateCheckoutDTO } from './dto/create-checkout.dto';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('stripe')
 @Controller('stripe')
@@ -26,6 +26,7 @@ export class StripeController {
     @ApiBearerAuth()
     @ApiOperation({ summary: 'Create a checkout session' })
     @ApiBody({ type: CreateCheckoutDTO })
+    @ApiHeader({ name: 'authorization', description: 'Bearer token' })
     @ApiResponse({ status: 201, description: 'Checkout session created successfully.' })
     @ApiResponse({ status: 400, description: 'Bad Request.' })
     async checkoutSession(

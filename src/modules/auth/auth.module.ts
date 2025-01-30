@@ -4,10 +4,13 @@ import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
 import { UserModule } from '../user/user.module';
 import { JwtModule } from '@nestjs/jwt';
+import { EmailService } from './email.service';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     UserModule,
+    ConfigModule,
     JwtModule.register({
       global: true,
       secret: String(process.env.SECRET_KEY),
@@ -15,6 +18,7 @@ import { JwtModule } from '@nestjs/jwt';
     })
   ],
   providers: [
+    EmailService,
     AuthService,
     {
       provide: 'APP_GUARD',

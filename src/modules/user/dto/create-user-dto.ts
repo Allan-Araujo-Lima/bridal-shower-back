@@ -42,4 +42,10 @@ export class CreateUserDto {
         example: '2022-12-31'
     })
     expiration_date: Date;
+
+    @ApiProperty({
+        description: 'Token for password recovery',
+        default: undefined
+    })
+    reset_token: string
 }

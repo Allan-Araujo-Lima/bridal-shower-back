@@ -27,9 +27,9 @@ export class StripeService {
     }
 
     async createCheckoutSession(idProduct: number, token: string) {
-        const userId = await this.authService.getUserId(token);
+            const userId = await this.authService.getUserId(token);
 
-        console.log(userId);
+            console.log(userId);
 
         const productPrice = ProductType[idProduct];
         if (!productPrice) {

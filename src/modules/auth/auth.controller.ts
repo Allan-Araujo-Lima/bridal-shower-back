@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { Public } from './public.decorator';
 import { SignInDto } from './dto/signin-dto';
@@ -20,6 +20,16 @@ export class AuthController {
     return this.authService.signIn(user_data.email, user_data.password)
   }
 
+  @Public()
+  @ApiResponse({
+    status: 200,
+    description: "Password changed successfuly"
+  })
+  @Post('forgot-password/:email')
+  async sendEmailForgotPassword(@Param() email): Promise<void> {
+    return this.authService.sendEmailForgotPassword(email.email)
+  }
+
   @ApiResponse({
     status: 200,
     description: 'Users taken',
@@ -29,3 +39,4 @@ export class AuthController {
     return this.authService.getUser(req);
   }
 }
+

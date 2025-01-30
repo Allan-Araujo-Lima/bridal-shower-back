@@ -1,13 +1,15 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { EmailService } from './email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UserService,
     private jwtService: JwtService,
+    private emailService: EmailService,
   ) { }
 
   async signIn(email: string, password: string): Promise<any> {
@@ -59,5 +61,15 @@ export class AuthService {
     } catch (err) {
       throw new UnauthorizedException('Invalid or expired token')
     }
+  }
+
+  async sendEmailForgotPassword(email: string): Promise<void> {
+    const user = await this.userService.findOneWithEmail(email)
+
+    if (!user) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    }
+
+    await this.emailService.sendResetPasswordLink(email);
   }
 }
