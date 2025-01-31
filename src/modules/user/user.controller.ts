@@ -19,6 +19,12 @@ export class UserController {
     return await this.userService.create(user);
   }
 
+  @Public()
+  @Patch('change-password/:token')
+  async changePassword(@Param('token') token: string, @Body('password') password: string) {
+    await this.userService.changePassword(token, password)
+  }
+
   @Get()
   findAllUsers() {
     return this.userService.findAllUsers();

@@ -3,6 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { UserService } from "../user/user.service";
 import { MailerService } from "@nestjs-modules/mailer";
+import { UpdateUserDto } from "../user/dto/update-user-dto";
 
 @Injectable()
 export class EmailService {
@@ -10,30 +11,33 @@ export class EmailService {
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService,
         private userService: UserService,
-        private mailerService: MailerService) { }
+        private readonly mailerService: MailerService
+    ) { }
 
-    public async sendResetPasswordLink(email: string): Promise<void> {
-        const payload = { email };
+    async sendResetPasswordLink(email: string): Promise<void> {
+        const user = await this.userService.findByEmail(email);
+        if (!user) {
+            throw new Error("Usuário não encontrado.");
+        }
 
-        const token = this.jwtService.sign(payload, {
+        const payload = { id: user.id };
+        const token = await this.jwtService.signAsync(payload, {
             secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
             expiresIn: `${this.configService.get('JWT_VERIFICATION_TOKEN_EXPIRATION_TIME')}s`
         });
 
-        const user = this.userService.findByEmail(email);
-        (await user).reset_token = token;
-
         const url = `${this.configService.get('EMAIL_RESET_PASSWORD_URL')}?token=${token}`;
 
-        return this.mailerService
-            .sendMail({
-                to: 'naoresponda@weddingnow.com',
-                from: 'allanvoide@gmail.com',
+        try {
+            await this.mailerService.sendMail({
+                from: 'naoresponda@weddingnow.com',
+                to: email,
                 subject: 'Resetar sua senha - Wedding Now',
-                html: `<b>Olá ${(await user).name}!</b></br> </br>
-                <p>Clique <a href=${url}>aqui</a> para redefinir sua senha.</p>`
-            })
-            .then(() => { })
-            .catch(() => { })
+                html: `<b>Olá ${user.name}!</b><br/><br/>
+                       <p>Clique <a href="${url}">aqui</a> para redefinir sua senha.</p>`,
+            });
+        } catch (error) {
+            throw new Error(`Erro ao enviar e-mail: ${error.message}`);
+        }
     }
 }

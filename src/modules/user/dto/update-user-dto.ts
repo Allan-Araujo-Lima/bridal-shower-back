@@ -16,4 +16,9 @@ export class UpdateUserDto {
     @IsString()
     @IsOptional()
     password?: string;
+
+    @ApiProperty({ description: 'Token for password reset' })
+    @IsString()
+    @IsOptional()
+    reset_token?: string;
 }

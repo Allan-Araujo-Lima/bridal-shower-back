@@ -1,16 +1,20 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './repository/index.entity';
 import { LessThan, Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user-dto';
 import * as bcrypt from 'bcrypt';
 import { Cron, CronExpression } from '@nestjs/schedule';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService
   ) { }
 
   async create(user: User) {
@@ -115,6 +119,22 @@ export class UserService {
 
     await this.userRepository.update(id, { expiration_date, is_active: true });
     return this.userRepository.findOne({ where: { id } });
+  }
+
+  async changePassword(token: string, newPassword: string) {
+    const decodedToken = await this.jwtService.verifyAsync(token,
+      { secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET') })
+
+    if (!decodedToken || !('id' in decodedToken)) {
+      throw new BadRequestException('Expired or empty token')
+    }
+
+    newPassword = await bcrypt.hash(
+      newPassword,
+      Number(process.env.SALT_PASSWORD),
+    );
+
+    await this.userRepository.update(decodedToken.id, { password: newPassword })
   }
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
