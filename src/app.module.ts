@@ -13,6 +13,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { WeddingModule } from './modules/wedding/wedding.module';
 
 @Module({
   imports: [
@@ -59,6 +60,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
     UserModule,
     AuthModule,
     StripeModule,
+    WeddingModule,
 
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),
