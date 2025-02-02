@@ -1,6 +1,8 @@
+import { User } from "src/modules/user/repository/index.entity";
 import {
     Column,
     Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
 } from "typeorm"
 
@@ -20,4 +22,7 @@ export class Sugestions {
 
     @Column({ nullable: true })
     guest: string;
+
+    @ManyToOne(() => User, (user) => user.id, { cascade: true })
+    user: User
 }

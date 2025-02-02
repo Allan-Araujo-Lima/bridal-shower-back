@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Put, Param, Patch, UseInterceptors, Request, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UseInterceptors, Request, UploadedFile } from '@nestjs/common';
 import { SugestionsService } from './sugestions.service';
 import { CreateSugestion } from './dto/create-sugestion.dto';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
@@ -21,9 +21,19 @@ export class SugestionsController {
 
     @ApiResponse({
         status: 200,
-        description: 'Sugestions taken by guest',
+        description: 'Suggestion taken by user'
     })
-    @Get(':guest')
+    @Get('user')
+    findAllByUser(@Request() req) {
+        const userId = req.user_data?.sub;
+        return this.sugestionsService.findAllByUser(userId);
+    }
+
+    @ApiResponse({
+        status: 200,
+        description: 'Suggestions taken by guest',
+    })
+    @Get('guest/:guest')
     findAllByGuest(@Param('guest') guest: string) {
         return this.sugestionsService.findAllByGuest(guest);
     }
@@ -35,10 +45,12 @@ export class SugestionsController {
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     async create(
+        @Request() req,
         @Body() createSugestionDto: CreateSugestion,
         @UploadedFile() file: Express.Multer.File
     ) {
-        const sugestion = await this.sugestionsService.create(createSugestionDto);
+        const userId = req.user_data?.sub;
+        const sugestion = await this.sugestionsService.create(userId, createSugestionDto);
 
         const sugestionId = sugestion['id'];
 
@@ -46,6 +58,7 @@ export class SugestionsController {
 
         return sugestion;
     }
+
     @ApiResponse({
         status: 200,
         description: 'Sugestion updated',

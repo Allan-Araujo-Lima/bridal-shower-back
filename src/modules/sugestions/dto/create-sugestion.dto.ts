@@ -21,10 +21,4 @@ export class CreateSugestion {
     })
     @IsString()
     category: string;
-    @ApiProperty({
-        description: 'Guest of the sugestion',
-        example: 'João'
-    })
-    @IsString()
-    guest: string
 }

@@ -4,6 +4,8 @@ import { Sugestions } from './repository/sugestions.entity';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
+import { User } from '../user/repository/index.entity';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class SugestionsService {
@@ -15,6 +17,7 @@ export class SugestionsService {
     constructor(
         @InjectRepository(Sugestions)
         private readonly sugestionsRepository: Repository<Sugestions>,
+        private readonly userService: UserService,
     ) {
         this.s3 = new AWS.S3({
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -26,13 +29,18 @@ export class SugestionsService {
         return this.sugestionsRepository.find();
     }
 
-    create(createSugestionDto: any) {
-        const sugestion = this.sugestionsRepository.create(createSugestionDto);
+    async create(userId: string, createSugestionDto: any) {
+        const user = await this.userService.findOne(userId);
+        const sugestion = this.sugestionsRepository.create({ ...createSugestionDto, user });
         return this.sugestionsRepository.save(sugestion);
     }
 
     findAllByGuest(guest: string) {
         return this.sugestionsRepository.find({ where: { guest } });
+    }
+
+    findAllByUser(id: string) {
+        return this.sugestionsRepository.find({ relations: ['user'], where: { user: { id } } });
     }
 
     update(id: string, updateSugestion: UpdateSugestion) {
