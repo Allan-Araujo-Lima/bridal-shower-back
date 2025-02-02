@@ -15,7 +15,11 @@ export class UserController {
   @Post('signup')
   async create(@Body() CreateUserDto: CreateUserDto) {
     const user = { ...CreateUserDto, id: undefined, created_at: new Date(), updated_at: new Date() };
-    return await this.userService.create(user);
+    await this.userService.create(user);
+
+    const createdUser = await this.userService.findOneWithEmail(user.email);
+
+    await this.userService.createFolder(createdUser.id)
   }
 
   @Public()

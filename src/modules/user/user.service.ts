@@ -7,15 +7,25 @@ import * as bcrypt from 'bcrypt';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class UserService {
+  private AWS_S3_BUCKET = "wedding-now";
+
+  private s3: AWS.S3;
+
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService
-  ) { }
+  ) {
+    this.s3 = new AWS.S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    });
+  }
 
   async create(user: User) {
     const verifyUser = await this.userRepository.findOne({ where: { email: user.email } });
@@ -144,5 +154,20 @@ export class UserService {
       { is_active: false },
     );
     console.log('Cron job executed', result.affected, 'users updated');
+  }
+
+  async createFolder(folderPath: string): Promise<void> {
+    const params = {
+      Bucket: this.AWS_S3_BUCKET,
+      Key: `${folderPath}/`,
+    };
+
+    try {
+      await this.s3.putObject(params).promise();
+      console.log(`Folder ${folderPath} created successfully in bucket ${this.AWS_S3_BUCKET}`);
+    } catch (error) {
+      console.error(`Error creating folder: ${error.message}`);
+      throw error;
+    }
   }
 }

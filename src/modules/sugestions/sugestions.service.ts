@@ -47,19 +47,20 @@ export class SugestionsService {
         return this.sugestionsRepository.update(id, updateSugestion)
     }
 
-    async uploadFile(file, sugestionId) {
+    async uploadFile(file, sugestionId, folderName) {
         return await this.s3_upload(
             file.buffer,
             this.AWS_S3_BUCKET,
             sugestionId,
             file.mimetype,
+            folderName
         );
     }
 
-    async s3_upload(file, bucket, name, mimetype) {
+    async s3_upload(file, bucket, name, mimetype, folderName) {
         const params = {
             Bucket: bucket,
-            Key: String(name),
+            Key: String(`${folderName}/${name}`),
             Body: file,
             ACL: 'public-read',
             ContentType: mimetype,

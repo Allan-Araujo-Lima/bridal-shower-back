@@ -54,7 +54,7 @@ export class SugestionsController {
 
         const sugestionId = sugestion['id'];
 
-        this.sugestionsService.uploadFile(file, sugestionId);
+        this.sugestionsService.uploadFile(file, sugestionId, userId);
 
         return sugestion;
     }
