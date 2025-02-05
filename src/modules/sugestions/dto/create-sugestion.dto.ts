@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsString } from "class-validator";
+import { IsOptional, IsString, IsUrl } from "class-validator";
 
 export class CreateSugestion {
     @ApiProperty({
@@ -21,4 +21,11 @@ export class CreateSugestion {
     })
     @IsString()
     category: string;
+    @ApiProperty({
+        description: 'URLs for another webpages to guest buy the suggestion',
+        example: 'https://amazon.com/fone'
+    })
+    @IsUrl()
+    @IsOptional()
+    url: string
 }

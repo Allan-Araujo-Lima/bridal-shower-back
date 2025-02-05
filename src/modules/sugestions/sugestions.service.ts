@@ -4,7 +4,6 @@ import { Sugestions } from './repository/sugestions.entity';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import { User } from '../user/repository/index.entity';
 import { UserService } from '../user/user.service';
 
 @Injectable()
