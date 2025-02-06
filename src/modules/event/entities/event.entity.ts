@@ -1,6 +1,7 @@
 import { IsOptional } from "class-validator";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "src/modules/user/repository/index.entity";
+import { Sugestions } from "src/modules/sugestions/entities/sugestions.entity";
 
 @Entity()
 export class Event {
@@ -32,7 +33,10 @@ export class Event {
     address: string;
 
     @ManyToOne(() => User, (user) => user.events)
-    user: User
+    user: User;
+
+    @OneToMany(() => Sugestions, (sugestions) => sugestions.event)
+    suggestions: Sugestions[];
 
     @CreateDateColumn()
     created_at: Date;

@@ -1,5 +1,5 @@
 import { SugestionsLinks } from "src/modules/sugestionsLinks/entities/sugestionsLinks.entity";
-import { User } from "src/modules/user/repository/index.entity";
+import { Event } from "src/modules/event/entities/event.entity";
 import {
     Column,
     Entity,
@@ -25,8 +25,8 @@ export class Sugestions {
     @Column({ nullable: true })
     guest: string;
 
-    @ManyToOne(() => User, (user) => user.id, { cascade: true })
-    user: User;
+    @ManyToOne(() => Event, (event) => event.suggestions)
+    event: Event;
 
     @OneToMany(() => SugestionsLinks, (sugestionsLink) => sugestionsLink.suggestion, { nullable: true })
     urls: SugestionsLinks[];

@@ -42,9 +42,6 @@ export class User {
     })
     reset_token: string;
 
-    @OneToMany(() => Sugestions, (sugestions) => sugestions.user, { nullable: true })
-    suggestions: Sugestions[];
-
     @OneToMany(() => Event, (events) => events.user, { nullable: true })
     events: Event[];
 

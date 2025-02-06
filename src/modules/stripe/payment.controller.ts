@@ -3,17 +3,13 @@ import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import { PaymentService } from './payment.service';
 import { Public } from '../auth/public.decorator';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('webhook')
 @Controller('webhook')
 export class PaymentController {
     constructor(private readonly paymentService: PaymentService) { }
 
     @Public()
     @Post()
-    @ApiResponse({ status: 200, description: 'Webhook received' })
-    @ApiResponse({ status: 400, description: 'Bad Request' })
     async handleWebhook(@Req() req: Request, @Res() res: Response): Promise<void> {
         const sig = req.headers['stripe-signature'];
         console.log()

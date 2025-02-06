@@ -21,12 +21,11 @@ export class SugestionsController {
 
     @ApiResponse({
         status: 200,
-        description: 'Suggestion taken by user'
+        description: 'Suggestion taken by event'
     })
-    @Get('user')
-    findAllByUser(@Request() req) {
-        const userId = req.user_data?.sub;
-        return this.sugestionsService.findAllByUser(userId);
+    @Get(':eventID')
+    findAllByEvent(@Param('eventID') eventID: string) {
+        return this.sugestionsService.findAllByEvent(eventID);
     }
 
     @ApiResponse({
@@ -45,16 +44,15 @@ export class SugestionsController {
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     async create(
-        @Request() req,
+        @Param('eventID') eventID: string,
         @Body() createSugestionDto: CreateSugestion,
         @UploadedFile() file: Express.Multer.File
     ) {
-        const userId = req.user_data?.sub;
-        const sugestion = await this.sugestionsService.create(userId, createSugestionDto);
+        const sugestion = await this.sugestionsService.create(eventID, createSugestionDto);
 
         const sugestionId = sugestion['id'];
 
-        this.sugestionsService.uploadFile(file, sugestionId, userId);
+        this.sugestionsService.uploadFile(file, sugestionId, eventID);
 
         return sugestion;
     }

@@ -4,7 +4,7 @@ import { Sugestions } from './entities/sugestions.entity';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
-import { UserService } from '../user/user.service';
+import { EventService } from '../event/event.service';
 
 @Injectable()
 export class SugestionsService {
@@ -16,7 +16,7 @@ export class SugestionsService {
     constructor(
         @InjectRepository(Sugestions)
         private readonly sugestionsRepository: Repository<Sugestions>,
-        private readonly userService: UserService,
+        private readonly eventService: EventService
     ) {
         this.s3 = new AWS.S3({
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -28,9 +28,9 @@ export class SugestionsService {
         return this.sugestionsRepository.find();
     }
 
-    async create(userId: string, createSugestionDto: any) {
-        const user = await this.userService.findOne(userId);
-        const sugestion = this.sugestionsRepository.create({ ...createSugestionDto, user });
+    async create(eventID: string, createSugestionDto: any) {
+        const event = await this.eventService.findOne(eventID);
+        const sugestion = this.sugestionsRepository.create({ ...createSugestionDto, event });
         return this.sugestionsRepository.save(sugestion);
     }
 
@@ -38,8 +38,8 @@ export class SugestionsService {
         return this.sugestionsRepository.find({ where: { guest } });
     }
 
-    findAllByUser(id: string) {
-        return this.sugestionsRepository.find({ relations: ['user'], where: { user: { id } } });
+    findAllByEvent(id: string) {
+        return this.sugestionsRepository.find({ relations: ['event'], where: { event: { id } } });
     }
 
     find(id: string) {
