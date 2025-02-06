@@ -13,14 +13,14 @@ export class EventService {
     private eventRepository: Repository<Event>,
     private readonly userService: UserService) { }
 
-  async create(eventID: string, createEventDTO: CreateEventDTO) {
-    const event = await this.userService.findOne(eventID)
+  async create(userId: string, createEventDTO: CreateEventDTO) {
+    const user = await this.userService.findOne(userId)
 
-    if (!event) {
-      throw new HttpException('Event not found', HttpStatus.NOT_FOUND)
+    if (!user) {
+      throw new HttpException('User not Found', HttpStatus.NOT_FOUND)
     }
 
-    return await this.eventRepository.save({ ...createEventDTO, event })
+    return await this.eventRepository.save({ ...createEventDTO, user })
   }
 
   findAll() {

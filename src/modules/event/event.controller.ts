@@ -11,10 +11,11 @@ export class EventController {
 
   @Post()
   create(
-    @Param('eventID') eventID: string,
+    @Request() req,
     @Body() createEventDTO: CreateEventDTO
   ) {
-    return this.eventService.create(eventID, createEventDTO);
+    const userId = req.user_data?.sub
+    return this.eventService.create(userId, createEventDTO);
   }
 
   @Get()
