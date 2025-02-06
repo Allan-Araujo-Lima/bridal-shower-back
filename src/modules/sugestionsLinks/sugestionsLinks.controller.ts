@@ -1,8 +1,9 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { SugestionsLinksService } from "./sugestionsLinks.service";
-import { ApiResponse } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateSugestionsLinks } from "./dto/create-sugestionsLinks.dto";
 
+@ApiTags('sugestions_url')
 @Controller('sugestions_url')
 export class SugestionsLinksController {
     constructor(private readonly sugestionsLinksService: SugestionsLinksService) { }
