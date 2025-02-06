@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional } from "class-validator";
 
-export class CreateWeddingDto {
+export class CreateEventDTO {
     @ApiProperty({
         description: "Nome do noivo ou noiva 1",
         example: "Marcia"

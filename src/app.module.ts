@@ -13,7 +13,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { WeddingModule } from './modules/wedding/wedding.module';
+import { EventModule } from './modules/event/event.module';
 import { SugestionsLinksModule } from './modules/sugestionsLinks/sugestionsLinks.module';
 
 @Module({
@@ -61,7 +61,7 @@ import { SugestionsLinksModule } from './modules/sugestionsLinks/sugestionsLinks
     UserModule,
     AuthModule,
     StripeModule,
-    WeddingModule,
+    EventModule,
     SugestionsLinksModule,
 
     ServeStaticModule.forRoot({

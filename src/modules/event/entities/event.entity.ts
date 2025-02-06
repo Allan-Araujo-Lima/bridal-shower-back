@@ -3,7 +3,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, 
 import { User } from "src/modules/user/repository/index.entity";
 
 @Entity()
-export class Wedding {
+export class Event {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
