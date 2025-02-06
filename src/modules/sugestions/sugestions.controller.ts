@@ -44,15 +44,17 @@ export class SugestionsController {
     @Post()
     @UseInterceptors(FileInterceptor('file'))
     async create(
+        @Request() req,
         @Param('eventID') eventID: string,
         @Body() createSugestionDto: CreateSugestion,
         @UploadedFile() file: Express.Multer.File
     ) {
-        const sugestion = await this.sugestionsService.create(eventID, createSugestionDto);
+        const userId = req.user_data?.sub;
+        const sugestion = await this.sugestionsService.create(userId, createSugestionDto);
 
         const sugestionId = sugestion['id'];
 
-        this.sugestionsService.uploadFile(file, sugestionId, eventID);
+        this.sugestionsService.uploadFile(file, sugestionId, userId);
 
         return sugestion;
     }

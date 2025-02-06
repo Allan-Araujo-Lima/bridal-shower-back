@@ -11,7 +11,8 @@ export class SignInDto {
     email: string;
     @ApiProperty({
         description: 'Password of the user',
-        example: 'Password123'
+        example: 'Password123',
+        minLength: 8
     })
     password: string
 }

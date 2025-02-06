@@ -2,7 +2,9 @@ import { Body, Controller, Post, Headers, BadRequestException } from '@nestjs/co
 import { StripeService } from './stripe.service';
 import { CreateChargeDTO } from './dto/create-charge.dto';
 import { CreateCheckoutDTO } from './dto/create-checkout.dto';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('stripe')
 export class StripeController {
     constructor(private readonly stripeService: StripeService) { }

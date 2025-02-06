@@ -21,11 +21,4 @@ export class CreateSugestion {
     })
     @IsString()
     category: string;
-    @ApiProperty({
-        description: 'URLs for another webpages to guest buy the suggestion',
-        example: 'https://amazon.com/fone'
-    })
-    @IsUrl()
-    @IsOptional()
-    url: string
 }

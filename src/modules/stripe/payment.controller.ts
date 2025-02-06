@@ -3,7 +3,9 @@ import { Request, Response } from 'express';
 import Stripe from 'stripe';
 import { PaymentService } from './payment.service';
 import { Public } from '../auth/public.decorator';
+import { ApiExcludeController } from '@nestjs/swagger';
 
+@ApiExcludeController()
 @Controller('webhook')
 export class PaymentController {
     constructor(private readonly paymentService: PaymentService) { }
