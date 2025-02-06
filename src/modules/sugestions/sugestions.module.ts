@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Sugestions } from "./repository/sugestions.entity";
+import { Sugestions } from "./entities/sugestions.entity";
 import { SugestionsController } from "./sugestions.controller";
 import { SugestionsService } from "./sugestions.service";
 import { UserModule } from "../user/user.module";

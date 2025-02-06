@@ -1,6 +1,10 @@
+import { SugestionsLinks } from "src/modules/sugestionsLinks/entities/sugestionsLinks.entity";
+import { User } from "src/modules/user/repository/index.entity";
 import {
     Column,
     Entity,
+    ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm"
 
@@ -20,4 +24,10 @@ export class Sugestions {
 
     @Column({ nullable: true })
     guest: string;
+
+    @ManyToOne(() => User, (user) => user.id, { cascade: true })
+    user: User;
+
+    @OneToMany(() => SugestionsLinks, (sugestionsLink) => sugestionsLink.suggestion, { nullable: true })
+    urls: SugestionsLinks[];
 }

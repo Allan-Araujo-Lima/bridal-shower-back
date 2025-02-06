@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Sugestions } from "src/modules/sugestions/entities/sugestions.entity";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -39,6 +40,9 @@ export class User {
         nullable: true
     })
     reset_token: string;
+
+    @OneToMany(() => Sugestions, (sugestions) => sugestions.user, { nullable: true })
+    suggestions: Sugestions[];
 
     @CreateDateColumn()
     created_at: Date;

@@ -1,4 +1,4 @@
 export class CreateSugestionsLinks {
-    loja: string;
+    name: string;
     url: string;
 }

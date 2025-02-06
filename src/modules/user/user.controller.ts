@@ -14,7 +14,7 @@ export class UserController {
   @Public()
   @Post('signup')
   async create(@Body() CreateUserDto: CreateUserDto) {
-    const user = { ...CreateUserDto, id: undefined, created_at: new Date(), updated_at: new Date() };
+    const user = { ...CreateUserDto, id: undefined, suggestions: undefined, created_at: new Date(), updated_at: new Date() };
     await this.userService.create(user);
 
     const createdUser = await this.userService.findOneWithEmail(user.email);

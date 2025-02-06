@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Sugestions } from './repository/sugestions.entity';
+import { Sugestions } from './entities/sugestions.entity';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
@@ -40,6 +40,10 @@ export class SugestionsService {
 
     findAllByUser(id: string) {
         return this.sugestionsRepository.find({ relations: ['user'], where: { user: { id } } });
+    }
+
+    find(id: string) {
+        return this.sugestionsRepository.findOne({ where: { id } })
     }
 
     update(id: string, updateSugestion: UpdateSugestion) {
