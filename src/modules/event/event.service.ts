@@ -41,7 +41,13 @@ export class EventService {
     await this.eventRepository.update(id, updateEventDTO)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} wedding`;
+  async remove(id: string) {
+    const event = await this.eventRepository.findOne({ where: { id } });
+
+    if (!event) {
+      throw new HttpException('Event not found', HttpStatus.NOT_FOUND)
+    };
+
+    return this.eventRepository.delete(id)
   }
 }

@@ -2,9 +2,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Sugestions } from './entities/sugestions.entity';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
-import { Injectable } from '@nestjs/common';
-import * as AWS from 'aws-sdk';
 import { EventService } from '../event/event.service';
+import { UserService } from '../user/user.service';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class SugestionsService {
@@ -16,7 +17,8 @@ export class SugestionsService {
     constructor(
         @InjectRepository(Sugestions)
         private readonly sugestionsRepository: Repository<Sugestions>,
-        private readonly eventService: EventService
+        private readonly eventService: EventService,
+        private readonly userService: UserService
     ) {
         this.s3 = new AWS.S3({
             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -28,9 +30,10 @@ export class SugestionsService {
         return this.sugestionsRepository.find();
     }
 
-    async create(eventID: string, createSugestionDto: any) {
+    async create(eventID: string, userID, createSugestionDto: any) {
         const event = await this.eventService.findOne(eventID);
-        const sugestion = this.sugestionsRepository.create({ ...createSugestionDto, event });
+        const user = await this.userService.findOne(userID)
+        const sugestion = this.sugestionsRepository.create({ ...createSugestionDto, event, user });
         return this.sugestionsRepository.save(sugestion);
     }
 
@@ -48,6 +51,16 @@ export class SugestionsService {
 
     update(id: string, updateSugestion: UpdateSugestion) {
         return this.sugestionsRepository.update(id, updateSugestion)
+    }
+
+    async remove(id: string) {
+        try {
+            await this.sugestionsRepository.findOne({ where: { id } })
+        } catch (error) {
+            throw new HttpException('Suggestion not found', HttpStatus.NOT_FOUND)
+        }
+
+        return this.sugestionsRepository.delete(id)
     }
 
     async uploadFile(file, sugestionId, folderName) {

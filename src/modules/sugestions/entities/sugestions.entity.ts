@@ -25,9 +25,9 @@ export class Sugestions {
     @Column({ nullable: true })
     guest: string;
 
-    @ManyToOne(() => Event, (event) => event.suggestions)
+    @ManyToOne(() => Event, (event) => event.suggestions, { onDelete: 'CASCADE' })
     event: Event;
 
-    @OneToMany(() => SugestionsLinks, (sugestionsLink) => sugestionsLink.suggestion, { nullable: true })
+    @OneToMany(() => SugestionsLinks, (sugestionsLink) => sugestionsLink.suggestion, { nullable: true, cascade: true, onDelete: 'CASCADE' })
     urls: SugestionsLinks[];
 }

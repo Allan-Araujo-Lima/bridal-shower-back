@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, UseInterceptors, Request, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UseInterceptors, Request, UploadedFile, Delete } from '@nestjs/common';
 import { SugestionsService } from './sugestions.service';
 import { CreateSugestion } from './dto/create-sugestion.dto';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
@@ -41,7 +41,7 @@ export class SugestionsController {
         status: 200,
         description: 'Sugestion created',
     })
-    @Post()
+    @Post(':eventID')
     @UseInterceptors(FileInterceptor('file'))
     async create(
         @Request() req,
@@ -49,22 +49,27 @@ export class SugestionsController {
         @Body() createSugestionDto: CreateSugestion,
         @UploadedFile() file: Express.Multer.File
     ) {
-        const userId = req.user_data?.sub;
-        const sugestion = await this.sugestionsService.create(userId, createSugestionDto);
+        const userID = req.user_data?.sub;
+        const sugestion = await this.sugestionsService.create(eventID, userID, createSugestionDto);
 
         const sugestionId = sugestion['id'];
 
-        this.sugestionsService.uploadFile(file, sugestionId, userId);
+        this.sugestionsService.uploadFile(file, sugestionId, userID);
 
         return sugestion;
     }
 
     @ApiResponse({
         status: 200,
-        description: 'Sugestion updated',
+        description: 'Sugestion updated'
     })
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateSugestion: UpdateSugestion) {
         return this.sugestionsService.update(id, updateSugestion)
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.sugestionsService.remove(id)
     }
 }

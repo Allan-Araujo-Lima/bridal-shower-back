@@ -42,7 +42,7 @@ export class User {
     })
     reset_token: string;
 
-    @OneToMany(() => Event, (events) => events.user, { nullable: true })
+    @OneToMany(() => Event, (events) => events.user, { nullable: true, onDelete: 'CASCADE' })
     events: Event[];
 
     @CreateDateColumn()

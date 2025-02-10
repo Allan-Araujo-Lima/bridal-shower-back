@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nes
 import { EventService } from './event.service';
 import { CreateEventDTO } from './dto/create-event.dto';
 import { UpdateEventDTO } from './dto/update-event.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('event')
 @Controller('event')
@@ -31,5 +31,10 @@ export class EventController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEventDTO: UpdateEventDTO) {
     return this.eventService.update(id, updateEventDTO);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.eventService.remove(id);
   }
 }

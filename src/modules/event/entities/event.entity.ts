@@ -32,10 +32,10 @@ export class Event {
     @Column({ nullable: true })
     address: string;
 
-    @ManyToOne(() => User, (user) => user.events)
+    @ManyToOne(() => User, (user) => user.id)
     user: User;
 
-    @OneToMany(() => Sugestions, (sugestions) => sugestions.event)
+    @OneToMany(() => Sugestions, (sugestions) => sugestions.event, { cascade: true, onDelete: 'CASCADE' })
     suggestions: Sugestions[];
 
     @CreateDateColumn()
