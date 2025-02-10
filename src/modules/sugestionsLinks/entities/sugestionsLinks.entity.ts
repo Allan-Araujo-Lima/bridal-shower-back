@@ -12,6 +12,6 @@ export class SugestionsLinks {
     @Column()
     url: string;
 
-    @ManyToOne(() => Sugestions, (sugestions) => sugestions.urls, { onDelete: 'CASCADE' })
+    @ManyToOne(() => Sugestions, (sugestions) => sugestions.urls, { onDelete: 'CASCADE', })
     suggestion: Sugestions;
 }

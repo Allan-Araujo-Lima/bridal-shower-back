@@ -32,7 +32,7 @@ export class Event {
     @Column({ nullable: true })
     address: string;
 
-    @ManyToOne(() => User, (user) => user.id)
+    @ManyToOne(() => User, (user) => user.events)
     user: User;
 
     @OneToMany(() => Sugestions, (sugestions) => sugestions.event, { cascade: true, onDelete: 'CASCADE' })
