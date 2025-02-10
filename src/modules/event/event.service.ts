@@ -31,6 +31,12 @@ export class EventService {
     return this.eventRepository.findOne({ where: { id } })
   }
 
+  findAllByUser(req: any) {
+    const id = req.user_data?.sub;
+
+    return this.eventRepository.find({ relations: ['user'], where: { user: { id } } })
+  }
+
   async update(id: string, updateEventDTO: UpdateEventDTO) {
     const user = await this.eventRepository.findOne({ where: { id } })
 

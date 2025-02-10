@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nes
 import { EventService } from './event.service';
 import { CreateEventDTO } from './dto/create-event.dto';
 import { UpdateEventDTO } from './dto/update-event.dto';
-import { ApiTags, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 @ApiTags('event')
 @Controller('event')
@@ -90,6 +90,62 @@ export class EventController {
   @Get()
   findAll() {
     return this.eventService.findAll();
+  }
+
+  @ApiResponse({
+    status: 200,
+    example: [
+      {
+        "id": "fa77c35c-9fa0-4ed4-95f9-02438afd817f",
+        "noivo_a1": "Teste",
+        "noivo_a2": "Teste",
+        "event_name": "Event",
+        "event_type": "Festa de Noivado",
+        "event_date": "2025-01-01T03:00:00.000Z",
+        "confirm_presence_until": null,
+        "invites": 500,
+        "address": null,
+        "created_at": "2025-02-10T18:30:29.702Z",
+        "updated_at": "2025-02-10T18:30:29.702Z",
+        "user": {
+          "id": "acbe8dd0-fdd5-41c6-b584-84b6be2aa4c7",
+          "email": "allanvoide@outlook.com",
+          "name": "Eden",
+          "last_name": "TesteAws",
+          "is_active": false,
+          "expiration_date": "2025-01-01T20:37:15.589Z",
+          "created_at": "2025-02-02T15:21:45.777Z",
+          "updated_at": "2025-02-05T06:00:00.657Z"
+        }
+      },
+      {
+        "id": "757a9565-d017-4306-88ca-6cc5ac098f16",
+        "noivo_a1": "Teste2",
+        "noivo_a2": "Teste2",
+        "event_name": "Event2",
+        "event_type": "Aniversário",
+        "event_date": "2025-01-01T03:00:00.000Z",
+        "confirm_presence_until": null,
+        "invites": 50,
+        "address": null,
+        "created_at": "2025-02-10T18:30:52.722Z",
+        "updated_at": "2025-02-10T18:30:52.722Z",
+        "user": {
+          "id": "acbe8dd0-fdd5-41c6-b584-84b6be2aa4c7",
+          "email": "allanvoide@outlook.com",
+          "name": "Eden",
+          "last_name": "TesteAws",
+          "is_active": false,
+          "expiration_date": "2025-01-01T20:37:15.589Z",
+          "created_at": "2025-02-02T15:21:45.777Z",
+          "updated_at": "2025-02-05T06:00:00.657Z"
+        }
+      }
+    ]
+  })
+  @Get('user')
+  findAllByUSer(@Request() req) {
+    return this.eventService.findAllByUser(req)
   }
 
   @ApiParam({
