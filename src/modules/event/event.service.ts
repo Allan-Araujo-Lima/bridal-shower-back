@@ -38,7 +38,7 @@ export class EventService {
       throw new HttpException('User not found', 404);
     }
 
-    await this.eventRepository.update(id, updateEventDTO)
+    return await this.eventRepository.update(id, updateEventDTO)
   }
 
   async remove(id: string) {

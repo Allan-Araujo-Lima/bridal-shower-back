@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Request } fro
 import { AuthService } from './auth.service';
 import { Public } from './public.decorator';
 import { SignInDto } from './dto/signin-dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -20,11 +20,16 @@ export class AuthController {
     return this.authService.signIn(user_data.email, user_data.password)
   }
 
-  @Public()
+  @ApiParam({
+    name: 'email',
+    description: 'Email that forgot password url must to be sended',
+    example: "example@xyz.com"
+  })
   @ApiResponse({
     status: 200,
     description: "Password changed successfuly"
   })
+  @Public()
   @Post('forgot-password/:email')
   async sendEmailForgotPassword(@Param() email): Promise<void> {
     return this.authService.sendEmailForgotPassword(email.email)
