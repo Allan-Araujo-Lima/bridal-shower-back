@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nes
 import { EventService } from './event.service';
 import { CreateEventDTO } from './dto/create-event.dto';
 import { UpdateEventDTO } from './dto/update-event.dto';
-import { ApiTags, ApiResponse, ApiParam } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiParam, ApiOperation } from '@nestjs/swagger';
 
 @ApiTags('event')
 @Controller('event')
@@ -142,6 +142,10 @@ export class EventController {
         }
       }
     ]
+  })
+  @ApiOperation({
+    summary: 'Find event by user',
+    description: 'Find event with the logged user'
   })
   @Get('user')
   findAllByUSer(@Request() req) {

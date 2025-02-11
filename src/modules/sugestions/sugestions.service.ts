@@ -32,13 +32,21 @@ export class SugestionsService {
 
     async create(eventID: string, userID, createSugestionDto: any) {
         const event = await this.eventService.findOne(eventID);
-        const user = await this.userService.findOne(userID)
+        const user = await this.userService.findOne(userID);
         const sugestion = this.sugestionsRepository.create({ ...createSugestionDto, event, user });
         return this.sugestionsRepository.save(sugestion);
     }
 
-    findAllByGuest(guest: string) {
-        return this.sugestionsRepository.find({ where: { guest } });
+    async findAllByGuest(eventID: string, guest: string) {
+        const event = await this.eventService.findOne(eventID);
+        if (!event) {
+            throw new HttpException('Event not found', HttpStatus.NOT_FOUND)
+        }
+
+        return this.sugestionsRepository.find({
+            relations: ['event'],
+            where: { event: { id: eventID }, guest: guest }
+        });
     }
 
     findAllByEvent(id: string) {
