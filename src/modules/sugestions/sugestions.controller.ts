@@ -49,6 +49,11 @@ export class SugestionsController {
         return this.sugestionsService.findAll();
     }
 
+
+    @ApiParam({
+        name: 'eventID',
+        description: 'Event ID'
+    })
     @ApiResponse({
         status: 200,
         example:
@@ -77,7 +82,7 @@ export class SugestionsController {
     })
     @ApiOperation({
         summary: "public",
-        description: "this route does not require authentication"
+        description: "Returns all the suggestions at a certain event"
     })
     @Public()
     @Get(':eventID')
@@ -144,7 +149,7 @@ export class SugestionsController {
     })
     @ApiOperation({
         summary: "public",
-        description: "this route does not require authentication"
+        description: "Return all the times that a certain guest appears on a event"
     })
     @Public()
     @Get(':eventID/:guest')
@@ -152,6 +157,10 @@ export class SugestionsController {
         return this.sugestionsService.findAllByGuest(eventID, guest);
     }
 
+    @ApiParam({
+        name: 'eventID',
+        description: 'ID of the event that suggestion must to be related'
+    })
     @ApiResponse({
         status: 200,
         description: 'Sugestion created',
@@ -176,7 +185,11 @@ export class SugestionsController {
 
     @ApiResponse({
         status: 200,
-        description: 'Sugestion updated'
+        description: 'Suggestion updated'
+    })
+    @ApiResponse({
+        status: 404,
+        description: 'Suggestion not found'
     })
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateSugestion: UpdateSugestion) {

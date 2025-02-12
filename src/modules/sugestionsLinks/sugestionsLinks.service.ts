@@ -3,6 +3,7 @@ import { SugestionsService } from "../sugestions/sugestions.service";
 import { InjectRepository } from "@nestjs/typeorm";
 import { SugestionsLinks } from "./entities/sugestionsLinks.entity";
 import { Repository } from "typeorm";
+import { UpdateSugestionsLinksDTO } from "./dto/update-suggestionsLinks.dto";
 
 @Injectable()
 export class SugestionsLinksService {
@@ -41,5 +42,25 @@ export class SugestionsLinksService {
         }
 
         return link
+    }
+
+    async update(id: string, updateSugestionsLinksDTO: UpdateSugestionsLinksDTO) {
+        const link = await this.sugestionsLinks.findOne({ where: { id } })
+
+        if (!link) {
+            throw new HttpException('Link not found', HttpStatus.NOT_FOUND)
+        }
+
+        return this.sugestionsLinks.update(id, updateSugestionsLinksDTO)
+    }
+
+    async remove(id: string) {
+        const link = await this.sugestionsLinks.findOne({ where: { id } })
+
+        if (!link) {
+            throw new HttpException('Link not found', HttpStatus.NOT_FOUND)
+        }
+
+        return this.sugestionsLinks.delete(id)
     }
 }

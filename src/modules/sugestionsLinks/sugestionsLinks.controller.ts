@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 import { SugestionsLinksService } from "./sugestionsLinks.service";
-import { ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CreateSugestionsLinks } from "./dto/create-sugestionsLinks.dto";
+import { UpdateSugestionsLinksDTO } from "./dto/update-suggestionsLinks.dto";
+import { Public } from "../auth/public.decorator";
 
 @ApiTags('sugestions_url')
 @Controller('sugestions_url')
@@ -55,6 +57,11 @@ export class SugestionsLinksController {
         ],
         description: 'SuggestionsURL taken by suggestion'
     })
+    @ApiOperation({
+        summary: 'public',
+        description: "Take all the Suggestions URLs by one suggestion"
+    })
+    @Public()
     @Get(':id')
     findAllBySuggestion(@Param('id') id: string) {
         return this.sugestionsLinksService.findAllBySugestion(id)
@@ -78,5 +85,31 @@ export class SugestionsLinksController {
     @Get()
     findAll() {
         return this.sugestionsLinksService.findAll()
+    }
+
+    @ApiResponse({
+        status: 200,
+        description: 'Suggestion link updated'
+    })
+    @ApiResponse({
+        status: 404,
+        description: 'Link not found'
+    })
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateSugestionsLinksDTO: UpdateSugestionsLinksDTO) {
+        return this.sugestionsLinksService.update(id, updateSugestionsLinksDTO)
+    }
+
+    @ApiResponse({
+        status: 200,
+        description: 'Suggestion link deleted'
+    })
+    @ApiResponse({
+        status: 404,
+        description: 'Link not found'
+    })
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.sugestionsLinksService.remove(id)
     }
 }

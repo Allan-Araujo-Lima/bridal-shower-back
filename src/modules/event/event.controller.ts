@@ -144,8 +144,7 @@ export class EventController {
     ]
   })
   @ApiOperation({
-    summary: 'Find event by user',
-    description: 'Find event with the logged user'
+    description: 'Find all events with the logged user'
   })
   @Get('user')
   findAllByUSer(@Request() req) {

@@ -57,7 +57,13 @@ export class SugestionsService {
         return this.sugestionsRepository.findOne({ where: { id } })
     }
 
-    update(id: string, updateSugestion: UpdateSugestion) {
+    async update(id: string, updateSugestion: UpdateSugestion) {
+        const suggestion = await this.sugestionsRepository.findOne({ where: { id } })
+
+        if (!suggestion) {
+            throw new HttpException('Suggestion not found', HttpStatus.NOT_FOUND)
+        }
+
         return this.sugestionsRepository.update(id, updateSugestion)
     }
 

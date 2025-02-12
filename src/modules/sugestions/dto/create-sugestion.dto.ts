@@ -10,7 +10,8 @@ export class CreateSugestion {
     name: string;
     @ApiProperty({
         description: 'Description of the sugestion',
-        example: 'Liquidificador de 1000W para fazer deliciosos sucos'
+        example: 'Liquidificador de 1000W para fazer deliciosos sucos',
+        nullable: true
     })
     @IsString()
     @IsOptional()

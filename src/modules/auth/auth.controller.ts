@@ -9,12 +9,20 @@ import { ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class AuthController {
   constructor(private authService: AuthService) { }
 
-  @Public()
-  @HttpCode(HttpStatus.OK)
   @ApiResponse({
     status: 200,
     description: 'User successfully logged in',
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Wrong password or email'
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found'
+  })
+  @HttpCode(HttpStatus.OK)
+  @Public()
   @Post('signin')
   signIn(@Body() user_data: SignInDto) {
     return this.authService.signIn(user_data.email, user_data.password)
@@ -28,6 +36,10 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: "Password changed successfuly"
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'User not found'
   })
   @Public()
   @Post('forgot-password/:email')
