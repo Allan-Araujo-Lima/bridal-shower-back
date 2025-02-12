@@ -178,7 +178,9 @@ export class SugestionsController {
 
         const sugestionId = sugestion['id'];
 
-        this.sugestionsService.uploadFile(file, sugestionId, userID);
+        const folderName = `${userID}/${eventID}`
+
+        this.sugestionsService.uploadFile(file, sugestionId, folderName);
 
         return sugestion;
     }

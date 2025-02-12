@@ -11,19 +11,23 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 export class UserController {
   constructor(private readonly userService: UserService) { }
 
+  @ApiOperation({
+    summary: 'public',
+    description: 'create a new user'
+  })
   @ApiResponse({
     status: 201,
     description: 'User created'
   })
+  @ApiResponse({
+    status: 400,
+    description: 'User already exist'
+  })
   @Public()
   @Post('signup')
-  async create(@Body() CreateUserDto: CreateUserDto) {
+  create(@Body() CreateUserDto: CreateUserDto) {
     const user = { ...CreateUserDto, id: undefined, suggestions: undefined, events: undefined, created_at: new Date(), updated_at: new Date() };
-    await this.userService.create(user);
-
-    const createdUser = await this.userService.findOneWithEmail(user.email);
-
-    await this.userService.createFolder(createdUser.id)
+    return this.userService.create(user);
   }
 
   @ApiParam({

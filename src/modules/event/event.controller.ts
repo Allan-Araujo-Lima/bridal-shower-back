@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nes
 import { EventService } from './event.service';
 import { CreateEventDTO } from './dto/create-event.dto';
 import { UpdateEventDTO } from './dto/update-event.dto';
-import { ApiTags, ApiResponse, ApiParam, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiResponse, ApiParam, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('event')
 @Controller('event')
 export class EventController {
   constructor(private readonly eventService: EventService) { }
 
+  @ApiBearerAuth()
   @ApiResponse({
     status: 201,
     example: {

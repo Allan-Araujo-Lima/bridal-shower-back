@@ -39,7 +39,11 @@ export class UserService {
       Number(process.env.SALT_PASSWORD),
     );
 
-    await this.userRepository.save(user);
+    const userDB = await this.userRepository.save(user);
+
+    await this.createFolder(userDB.id);
+
+    return userDB
   }
 
   async findAllUsers() {

@@ -36,12 +36,6 @@ export class User {
     @Column({ type: 'timestamp', default: '2025-01-01 17:37:15.589091' })
     expiration_date: Date;
 
-    @Column({
-        select: false,
-        nullable: true
-    })
-    reset_token: string;
-
     @OneToMany(() => Event, (events) => events.user, { nullable: true, onDelete: 'CASCADE' })
     events: Event[];
 

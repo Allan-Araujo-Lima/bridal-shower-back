@@ -12,14 +12,13 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'User successfully logged in',
+    example: {
+      "access_token": "JWT_TOKEN"
+    }
   })
   @ApiResponse({
     status: 400,
     description: 'Wrong password or email'
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'User not found'
   })
   @HttpCode(HttpStatus.OK)
   @Public()

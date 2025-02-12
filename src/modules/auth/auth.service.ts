@@ -15,9 +15,6 @@ export class AuthService {
   async signIn(email: string, password: string): Promise<any> {
     const user_data = await this.userService.findOneWithEmail(email);
 
-    if (!user_data) {
-      throw new HttpException('User not found', 404);
-    }
     if (!user_data.password) {
       throw new HttpException('No password set for this profile', HttpStatus.BAD_REQUEST)
     }

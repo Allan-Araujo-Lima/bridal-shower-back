@@ -5,13 +5,23 @@ import { UserService } from '../user/user.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Event } from './entities/event.entity';
 import { Repository } from 'typeorm';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class EventService {
+  private AWS_S3_BUCKET = "wedding-now";
+
+  private s3: AWS.S3;
+
   constructor(
     @InjectRepository(Event)
     private eventRepository: Repository<Event>,
-    private readonly userService: UserService) { }
+    private readonly userService: UserService) {
+    this.s3 = new AWS.S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+    });
+  }
 
   async create(userId: string, createEventDTO: CreateEventDTO) {
     const user = await this.userService.findOne(userId)
@@ -20,7 +30,13 @@ export class EventService {
       throw new HttpException('User not Found', HttpStatus.NOT_FOUND)
     }
 
-    return await this.eventRepository.save({ ...createEventDTO, user })
+    const event = await this.eventRepository.save({ ...createEventDTO, user })
+
+    const folder = await this.createFolder(user.id, event.id)
+
+    console.log(folder)
+
+    return event
   }
 
   findAll() {
@@ -55,5 +71,20 @@ export class EventService {
     };
 
     return this.eventRepository.delete(id)
+  }
+
+  async createFolder(userID: string, folderPath: string): Promise<void> {
+    const params = {
+      Bucket: this.AWS_S3_BUCKET,
+      Key: `${userID}/${folderPath}/`,
+    };
+
+    try {
+      await this.s3.putObject(params).promise();
+      console.log(`Folder ${folderPath} created successfully in bucket ${this.AWS_S3_BUCKET} in the folder ${userID}`);
+    } catch (error) {
+      console.error(`Error creating folder: ${error.message}`);
+      throw error;
+    }
   }
 }
