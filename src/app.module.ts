@@ -15,6 +15,7 @@ import { PugAdapter } from '@nestjs-modules/mailer/dist/adapters/pug.adapter';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { EventModule } from './modules/event/event.module';
 import { SugestionsLinksModule } from './modules/sugestionsLinks/sugestionsLinks.module';
+import { TablesModule } from './modules/tables/tables.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { SugestionsLinksModule } from './modules/sugestionsLinks/sugestionsLinks
     StripeModule,
     EventModule,
     SugestionsLinksModule,
+    TablesModule,
 
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'uploads'),

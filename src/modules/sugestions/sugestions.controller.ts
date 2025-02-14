@@ -161,6 +161,10 @@ export class SugestionsController {
         return sugestion;
     }
 
+    @ApiOperation({
+        summary: 'public',
+        description: 'Update Suggestion'
+    })
     @ApiResponse({
         status: 200,
         description: 'Suggestion updated'
@@ -169,6 +173,7 @@ export class SugestionsController {
         status: 404,
         description: 'Suggestion not found'
     })
+    @Public()
     @Patch(':id')
     update(@Param('id') id: string, @Body() updateSugestion: UpdateSugestion) {
         return this.sugestionsService.update(id, updateSugestion)

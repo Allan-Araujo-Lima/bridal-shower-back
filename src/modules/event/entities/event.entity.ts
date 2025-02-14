@@ -2,6 +2,7 @@ import { IsOptional } from "class-validator";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "src/modules/user/repository/index.entity";
 import { Sugestions } from "src/modules/sugestions/entities/sugestions.entity";
+import { Table } from "src/modules/tables/entities/table.entity";
 
 @Entity()
 export class Event {
@@ -37,6 +38,9 @@ export class Event {
 
     @OneToMany(() => Sugestions, (sugestions) => sugestions.event, { cascade: true, onDelete: 'CASCADE' })
     suggestions: Sugestions[];
+
+    @OneToMany(() => Table, (tables) => tables.event, { cascade: true, onDelete: 'CASCADE' })
+    tables: Table[];
 
     @CreateDateColumn()
     created_at: Date;
