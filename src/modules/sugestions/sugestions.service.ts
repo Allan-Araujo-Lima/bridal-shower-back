@@ -4,8 +4,9 @@ import { Sugestions } from './entities/sugestions.entity';
 import { UpdateSugestion } from './dto/update-sugestion.dto';
 import { EventService } from '../event/event.service';
 import { UserService } from '../user/user.service';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, UseInterceptors } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
+import { InsertImageMapper } from 'src/utils/mappers/insert-images.mapper';
 
 @Injectable()
 export class SugestionsService {
@@ -50,7 +51,11 @@ export class SugestionsService {
     }
 
     findAllByEvent(id: string) {
-        return this.sugestionsRepository.find({ relations: ['event'], where: { event: { id } } });
+        return this.sugestionsRepository.find({
+            relations: ['event', 'event.user'],
+            where: { event: { id } },
+            select: { id: true, name: true, category: true, description: true, guest: true, urls: true, event: { id: true, user: { id: true } } }
+        });
     }
 
     find(id: string) {
